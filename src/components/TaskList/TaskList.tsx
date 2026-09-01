@@ -17,6 +17,7 @@ import { TaskItem } from "../TaskItem/TaskItem";
 export function TaskList({
     tasks,
     onStatusChange,
+    onEdit,
     onDelete
     }:TaskListProps){
 
@@ -31,7 +32,10 @@ export function TaskList({
      */
     const handleStatusChange = (id: string, newStatus: TaskStatus) => {
         onStatusChange(id, newStatus);
-        console.log(tasks)
+    }
+
+    const handleEdit = (id: string) => {
+        onEdit(id);
     }
 
     /**
@@ -58,6 +62,7 @@ export function TaskList({
                 key={task.id}
                 task={task}
                 onStatusChange={handleStatusChange}
+                onEdit={handleEdit}
                 onDelete={handleDelete}
                 />)
             })}
