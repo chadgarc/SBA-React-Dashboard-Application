@@ -2,7 +2,7 @@
 @plugin "daisyui";
 
 :root {
-  --text: #6b6375;
+  --text: hsl(0, 0%, 94%);
   --text-h: #08060d;
   --bg: #fff;
   --border: #e5e4e7;
@@ -10,7 +10,7 @@
   --accent: #aa3bff;
   --accent-bg: rgba(170, 59, 255, 0.1);
   --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
+  --social-bg: #f1f1f1db;
   --shadow:
     rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
 
@@ -35,7 +35,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --text: #9ca3af;
+    --text: hsl(180, 3%, 94%);
     --text-h: #f3f4f6;
     --bg: #16171d;
     --border: #2e303a;
@@ -92,4 +92,8 @@ h2 {
 }
 p {
   margin: 0;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
 }
