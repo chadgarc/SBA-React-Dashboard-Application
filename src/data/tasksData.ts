@@ -7,7 +7,7 @@ export const tasksData: Task[] = [
       description: 'Some description',
       status: 'completed',
       priority: 'low',
-      dueDate: '04/15/2026'
+      dueDate: '2026-04-15'
     },
     {
       id: '2030',
@@ -15,7 +15,7 @@ export const tasksData: Task[] = [
       description: 'Another description',
       status: 'pending',
       priority: 'medium',
-      dueDate: '04/20/2026'
+      dueDate: '2026-04-20'
     },
     {
       id: '2045',
@@ -23,7 +23,7 @@ export const tasksData: Task[] = [
       description: 'Another another description',
       status: 'pending',
       priority: 'high',
-      dueDate: '04/22/2026'
+      dueDate: '2026-04-22'
     },
     {
       id: '4010',
@@ -31,7 +31,7 @@ export const tasksData: Task[] = [
       description: 'More descriptions',
       status: 'in-progress',
       priority: 'medium',
-      dueDate: '04/26/2026'
+      dueDate: '2026-04-26'
     },
     {
       id: '2430',
@@ -39,6 +39,6 @@ export const tasksData: Task[] = [
       description: 'More and more descriptions',
       status: 'completed',
       priority: 'high',
-      dueDate: '04/25/2026'
+      dueDate: '2026-04-25'
     }
   ]
