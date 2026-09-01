@@ -1,4 +1,4 @@
-import type { TaskItemProps, TaskStatus } from "../../types";
+import type { Priority, TaskItemProps, TaskStatus } from "../../types";
 import { SelectList } from "../SelectList/SelectList";
 
 /**
@@ -18,6 +18,7 @@ import { SelectList } from "../SelectList/SelectList";
 export function TaskItem({
     task,
     onStatusChange,
+    onEdit,
     onDelete}: TaskItemProps){
 
     /**
@@ -31,7 +32,7 @@ export function TaskItem({
         'low': 'status-info',
         'medium': 'status-warning',
         'high': 'status-error',
-        }[task.priority];
+        }[task.priority as Priority];
 
     return (
         <li className="list-col-grow sm:list-row min-h-45 ps-10 pe-10 pt-5 pb-5 bg-slate-800">
@@ -70,6 +71,8 @@ export function TaskItem({
                 onChange={(newStatus) => onStatusChange(task.id, newStatus as TaskStatus)}
                 />
             </div>
+
+            <button className="btn btn-info" onClick={() => onEdit?.(task.id)}>Edit</button>
 
             {/*
              * Deletes the current task by invoking the parent callback `onDelete`.
