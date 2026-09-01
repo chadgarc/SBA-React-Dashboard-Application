@@ -31,8 +31,8 @@ export interface Task {
     id: string;
     title: string;
     description: string;
-    status: TaskStatus;
-    priority: Priority;
+    status?: TaskStatus;
+    priority?: Priority;
     dueDate: string;
 }
 
@@ -48,6 +48,7 @@ export interface Task {
 export interface TaskListProps {
     tasks: Task[];
     onStatusChange: (taskId: string, newStatus: TaskStatus) => void;
+    onEdit: (taskId: string) => void;
     onDelete: (taskId: string) => void;
 }
 
@@ -63,6 +64,7 @@ export interface TaskListProps {
 export interface TaskItemProps {
     task: Task;
     onStatusChange: (taskId: string, newStatus: TaskStatus) => void;
+    onEdit: (taskId: string) => void;
     onDelete: (taskId: string) => void;
 }
 
@@ -103,7 +105,7 @@ export interface Option<T> {
  * @property {(value: T) => void} onChange - Callback fired when the user selects a new value.
  */
 export interface SelectListProps<T> {
-    defaultValue: T,
+    defaultValue?: T,
     options: Option<T>[],
     onChange: (value: T) => void
 }
@@ -117,4 +119,47 @@ export interface SelectListProps<T> {
 export interface FilterHandle {
     status?: TaskStatus,
     priority?: Priority
+}
+
+export interface MetricsData {
+    total: number,
+    pending: number,
+    inProgress: number,
+    completed: number
+}
+
+export interface TaskFormProps{
+    isOpen: boolean,
+    onCancel: () => void,
+    onSave: () => void,
+    children: React.ReactNode
+}
+
+export interface ValidationValues{
+    title: boolean,
+    description: boolean,
+    status?: boolean,
+    priority?: boolean,
+    dueDate: boolean
+}
+
+export interface ModalProps{
+    task: Task,
+    validation: ValidationValues,
+    changeTitle: (title: String) => void,
+    changeDescription: (description: string) => void,
+    changeStatus: (status: TaskStatus) => void,
+    changePriority: (priority: Priority) => void,
+    changeDueDate: (dueDate: string) => void
+}
+
+export interface searchBarProps{
+    title: string,
+    placeHolder: string,
+    onTextChange: (text:string) => void
+}
+
+export interface StatProps{
+    title: string,
+    value: number
 }
