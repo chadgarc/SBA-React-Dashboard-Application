@@ -163,3 +163,9 @@ export interface StatProps{
     title: string,
     value: number
 }
+
+export interface SortableProps{
+    id:string,
+    index: number,
+    children: React.ReactNode
+}

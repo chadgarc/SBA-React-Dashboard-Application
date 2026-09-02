@@ -1,5 +1,7 @@
 import type { TaskListProps, TaskStatus } from "../../types";
+import { Sortable } from "../Drag and Drop/Sortable";
 import { TaskItem } from "../TaskItem/TaskItem";
+import { DragDropProvider } from "@dnd-kit/react";
 
 /**
  * Renders a list of tasks and delegates user interactions
@@ -53,19 +55,31 @@ export function TaskList({
     /**
      * Maps over the list of tasks and renders a TaskItem for each one.
      * Each TaskItem receives its own data and the delegated handlers.
+     * DragDropProvider sets the droppable area
+     * Sortable make it posible to sort them based in index, requires the unique id
      */
     return (
-        <ul className="list bg-base-100 rounded-box shadow-md">
-            {tasks.map(task => {
-                return (
-                <TaskItem
-                key={task.id}
-                task={task}
-                onStatusChange={handleStatusChange}
-                onEdit={handleEdit}
-                onDelete={handleDelete}
-                />)
-            })}
-        </ul>
+        <>
+            <ul className="list bg-base-100 rounded-box shadow-md">
+                <DragDropProvider>
+                    {tasks.map((task, index) => {
+                        return (
+                            <Sortable
+                                key={task.id}
+                                id={task.id}
+                                index={index}
+                            >
+                                <TaskItem
+                                task={task}
+                                onStatusChange={handleStatusChange}
+                                onEdit={handleEdit}
+                                onDelete={handleDelete}
+                                />
+                            </Sortable>
+                        )
+                        })}
+                </DragDropProvider>
+            </ul>
+        </>
     )
 }

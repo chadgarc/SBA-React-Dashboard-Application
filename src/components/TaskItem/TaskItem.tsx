@@ -1,5 +1,6 @@
 import type { Priority, TaskItemProps, TaskStatus } from "../../types";
 import { SelectList } from "../SelectList/SelectList";
+import {useDraggable} from '@dnd-kit/react';
 
 /**
  * Renders a single task item with its details, priority indicator,
@@ -21,6 +22,12 @@ export function TaskItem({
     onEdit,
     onDelete}: TaskItemProps){
 
+    // This will allow to drag this content, It requires an id and ref
+    const {ref} = useDraggable({
+        id: task.id,
+    });
+
+
     /**
      * Maps the task's priority to a corresponding CSS class
      * used to visually indicate urgency.
@@ -35,7 +42,7 @@ export function TaskItem({
         }[task.priority as Priority];
 
     return (
-        <li className="list-col-grow sm:list-row min-h-45 ps-10 pe-10 pt-5 pb-5 bg-slate-800">
+        <div ref={ref} className="list-col-grow sm:list-row min-h-45 ps-10 pe-10 pt-5 pb-5 bg-slate-800">
             
             <section className="flex flex-col justify-between w-120 text-wrap">
                 <div>
@@ -79,6 +86,6 @@ export function TaskItem({
              * The task ID is passed upward so the parent can update its state.
              */}
             <button className="btn btn-error" onClick={() => onDelete?.(task.id)}>Delete</button>
-        </li>
+        </div>
     )
 }
