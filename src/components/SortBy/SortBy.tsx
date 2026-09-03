@@ -1,3 +1,4 @@
+import type { SortByProps } from "../../types";
 import { SelectList } from "../SelectList/SelectList";
 
 /**
@@ -13,7 +14,7 @@ import { SelectList } from "../SelectList/SelectList";
  *
  * @param {{ handleSort: (value: string) => void }} props - Callback for sort changes.
  */
-export function SortBy({handleSort}:{handleSort: (value: string) => void}){
+export function SortBy({handleSort}: SortByProps){
 
     /**
      * Render Logic

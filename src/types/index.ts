@@ -227,3 +227,13 @@ export interface SortableProps{
     index: number,
     children: React.ReactNode
 }
+
+/**
+ * Props for the Sortable wrapper.
+ *
+ * @property {(value: string) => void} handleSort
+ * Fired when the user selects how to sort the tasks
+ */
+export interface SortByProps{
+    handleSort: (value: string) => void
+}
