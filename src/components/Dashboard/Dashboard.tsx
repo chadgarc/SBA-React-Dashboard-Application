@@ -6,8 +6,9 @@ import { TaskFilter } from "../TaskFilter/TaskFilter";
 import { TaskList } from "../TaskList/TaskList";
 import { SearchBar } from "../SearchBar/SearchBar";
 import { TaskForm } from "../TaskForm/TaskForm";
-import { createNewId, filteredTasks, defaultInputs, updateMetrics, validateTask } from "../utils/taskUtils";
+import { createNewId, filteredTasks, defaultInputs, updateMetrics, validateTask, onSortBy } from "../utils/taskUtils";
 import { Modal } from "../Modal/Modal";
+import { SortBy } from "../SortBy/SortBy";
 
 export function Dashboard(){
 
@@ -106,6 +107,11 @@ export function Dashboard(){
         setNewTask(defaultInputs())
     }
     
+    const handleSortBy = (value: string) => {
+        setTasks(onSortBy(tasks, value));
+        console.log(value)
+    }
+
     useEffect(() => {
         setMetrics(updateMetrics(tasks))
         localStorage.setItem('tasks', JSON.stringify(tasks));
@@ -139,10 +145,11 @@ export function Dashboard(){
                     />
                 </div>
             </section>
-        <section className="flex justify-start mt-2">
+        <section className="flex justify-between mt-2">
             <button className="btn bg-gray-300 text-black" onClick={() => addNewTask()}>
                 Add +
             </button>
+            <SortBy handleSort={handleSortBy}/>
         </section>
         </section>
         <section className='my-auto'>
