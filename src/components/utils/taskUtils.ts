@@ -14,14 +14,14 @@ export const filteredTasks = (tasks: Task[], searchInput: string, filters: {stat
         : tasks.filter( task => task.title.toLowerCase().includes(searchInput.toLowerCase())
             || task.description.toLowerCase().includes(searchInput.toLowerCase()))
 
-    const filteredTask = searchedTask.filter(task =>{
+    const filteredTasks = searchedTask.filter(task =>{
     const statusFilter = !filters.status || task.status === filters.status;
 
     const priorityFilter = !filters.priority || task.priority === filters.priority;
 
     return statusFilter && priorityFilter;
     })
-    return filteredTask;
+    return filteredTasks;
 }
 
 export function defaultInputs(): Task{
@@ -51,3 +51,21 @@ export const validateTask = (task: Task): ValidationValues => {
     }
     return checker;
 }
+
+export function onSortBy(taskList: Task[], value: string){
+        let sortedList: Task[] = [];
+        if(value === 'priority'){
+            const priorities = ['low','medium','high']
+            priorities.forEach( priority =>
+                taskList
+                    .filter( task => task.priority === priority)
+                    .forEach(filteredTask => sortedList.push(filteredTask)))
+        } else if (value === 'dueDate'){
+            sortedList = [...taskList].sort((task1, task2) =>
+                new Date(task1.dueDate).getTime() - new Date(task2.dueDate).getTime())
+        } else {
+            sortedList = [...taskList].sort((task1, task2) =>
+                Number(task1.id) - Number(task2.id))
+        }
+        return sortedList;
+    }
