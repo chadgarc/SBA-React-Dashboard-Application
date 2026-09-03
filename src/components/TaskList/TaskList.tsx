@@ -60,14 +60,14 @@ export function TaskList({
      */
     return (
         <>
-            <ul className="list bg-base-100 rounded-box shadow-md">
+            <ul className="list bg-base-100 mt-2 rounded-box shadow-md">
                 <DragDropProvider>
                     {tasks.map((task, index) => {
                         return (
                             <Sortable
-                                key={task.id}
-                                id={task.id}
-                                index={index}
+                            key={task.id}
+                            id={task.id}
+                            index={index}
                             >
                                 <TaskItem
                                 task={task}
@@ -75,6 +75,7 @@ export function TaskList({
                                 onEdit={handleEdit}
                                 onDelete={handleDelete}
                                 />
+                                <div className="my-1 w-full border-y-2 border-dotted border-slate-900"></div>
                             </Sortable>
                         )
                         })}

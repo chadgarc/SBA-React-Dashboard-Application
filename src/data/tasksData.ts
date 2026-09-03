@@ -7,7 +7,7 @@ export const tasksData: Task[] = [
       description: 'Unload incoming pallet and verify item quantities',
       status: 'pending',
       priority: 'medium',
-      dueDate: '2026-04-10'
+      dueDate: '2026-04-16'
     },
     {
       id: '2280',
@@ -15,7 +15,7 @@ export const tasksData: Task[] = [
       description: 'Perform cycle count on bins A4-01 to A4-20',
       status: 'in-progress',
       priority: 'high',
-      dueDate: '2026-04-12'
+      dueDate: '2026-07-12'
     },
     {
       id: '2395',
@@ -31,7 +31,7 @@ export const tasksData: Task[] = [
       description: 'Check damaged carton and report loss quantity',
       status: 'pending',
       priority: 'medium',
-      dueDate: '2026-04-14'
+      dueDate: '2026-08-14'
     },
     {
       id: '2675',
@@ -39,7 +39,7 @@ export const tasksData: Task[] = [
       description: 'Pack and label order #A-5521 for outbound shipment',
       status: 'in-progress',
       priority: 'high',
-      dueDate: '2026-04-15'
+      dueDate: '2026-04-10'
     },
     {
       id: '2788',
@@ -47,7 +47,7 @@ export const tasksData: Task[] = [
       description: 'Process returned items and restock usable inventory',
       status: 'completed',
       priority: 'low',
-      dueDate: '2026-04-16'
+      dueDate: '2026-04-18'
     },
     {
       id: '2890',
@@ -55,7 +55,7 @@ export const tasksData: Task[] = [
       description: 'Investigate mismatch between system and physical count',
       status: 'pending',
       priority: 'high',
-      dueDate: '2026-04-18'
+      dueDate: '2026-04-10'
     },
     {
       id: '3015',
@@ -71,7 +71,7 @@ export const tasksData: Task[] = [
       description: 'Clear and reorganize overflow storage rack B',
       status: 'completed',
       priority: 'low',
-      dueDate: '2026-04-20'
+      dueDate: '2026-04-25'
     },
     {
       id: '3290',
@@ -79,7 +79,7 @@ export const tasksData: Task[] = [
       description: 'Stage and load pallets for carrier pickup',
       status: 'pending',
       priority: 'high',
-      dueDate: '2026-04-22'
+      dueDate: '2026-05-22'
     },
     {
       id: '3420',
@@ -95,7 +95,7 @@ export const tasksData: Task[] = [
       description: 'Remove trash and restock packing materials',
       status: 'completed',
       priority: 'low',
-      dueDate: '2026-04-24'
+      dueDate: '2026-06-24'
     },
     {
       id: '3720',
