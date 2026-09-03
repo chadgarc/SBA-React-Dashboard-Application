@@ -3,18 +3,24 @@ import { SelectList } from "../SelectList/SelectList";
 import {useDraggable} from '@dnd-kit/react';
 
 /**
- * Renders a single task item with its details, priority indicator,
- * status selector, and delete action. This component does not manage
- * state internally; instead, it delegates updates and deletions to
- * callback functions provided by the parent component.
+ * TaskItem Component
+ * ------------------
+ * Displays a single task with its title, description, priority indicator,
+ * due date, status selector, and edit/delete actions. The component is fully
+ * controlled and delegates all updates to the parent component.
  *
- * @component
- * @param {TaskItemProps} props - Props for the TaskItem component.
- * @param {Task} props.task - The task data to display.
- * @param {(taskId: string, newStatus: TaskStatus) => void} props.onStatusChange
- *        Callback fired when the user selects a new status.
- * @param {(taskId: string) => void} props.onDelete
- *        Callback fired when the user deletes the task.
+ * Responsibilities:
+ * - Renders task information and visual priority indicator
+ * - Allows status changes through a SelectList dropdown
+ * - Provides Edit and Delete actions via callbacks
+ * - Enables drag‑and‑drop behavior using dnd‑kit's `useDraggable`
+ *
+ * Drag behavior:
+ * - `useDraggable` registers the component as a draggable item
+ * - Requires a unique `id` to track movement
+ * - Returns a `ref` that must be attached to the root element
+ *
+ * @param {TaskItemProps} props - Contains task data and action callbacks.
  */
 export function TaskItem({
     task,
@@ -22,25 +28,28 @@ export function TaskItem({
     onEdit,
     onDelete}: TaskItemProps){
 
-    // This will allow to drag this content, It requires an id and ref
+    /** Enable drag behavior for this task item */
     const {ref} = useDraggable({
         id: task.id,
     });
 
 
-    /**
-     * Maps the task's priority to a corresponding CSS class
-     * used to visually indicate urgency.
-     *
-     * @constant
-     * @type {string}
-     */
+    /** Map priority to a CSS class for visual urgency indicator */
     const priorityClass = {
         'low': 'status-info',
         'medium': 'status-warning',
         'high': 'status-error',
         }[task.priority as Priority];
 
+    /**
+     * Render Logic
+     * ------------
+     * - Root <div> is draggable via dnd‑kit's `ref`
+     * - Left section shows title, description, priority, and due date
+     * - Status dropdown uses SelectList and triggers `onStatusChange`
+     * - Edit and Delete buttons call their respective parent callbacks
+     * - Styling ensures responsive layout and consistent spacing
+     */
     return (
         <div ref={ref} className="list-col-grow sm:list-row min-h-45 ps-10 pe-10 pt-5 pb-5 bg-slate-800">
             
@@ -60,13 +69,6 @@ export function TaskItem({
                 
             </section>
 
-            {/*
-             * Status selector for the task. Uses the reusable SelectList
-             * component to allow the user to change the task's workflow state.
-             *
-             * When a new status is selected, the parent callback `onStatusChange`
-             * is invoked with the task ID and the new status value.
-             */}
             <div className="ms-auto">
                 <SelectList
                 defaultValue={task.status}
@@ -79,13 +81,11 @@ export function TaskItem({
                 />
             </div>
 
-            <button className="btn btn-info" onClick={() => onEdit?.(task.id)}>Edit</button>
+            <button className="transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:scale-110 hover:btn-primary
+                btn btn-info" onClick={() => onEdit?.(task.id)}>Edit</button>
 
-            {/*
-             * Deletes the current task by invoking the parent callback `onDelete`.
-             * The task ID is passed upward so the parent can update its state.
-             */}
-            <button className="btn btn-error" onClick={() => onDelete?.(task.id)}>Delete</button>
+            <button className="transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:scale-110 hover:btn-secondary
+                btn btn-error" onClick={() => onDelete?.(task.id)}>Delete</button>
         </div>
     )
 }

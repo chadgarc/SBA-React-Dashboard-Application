@@ -1,6 +1,27 @@
 import type { TaskStatus, Priority, ModalProps } from "../../types"
 import { SelectList } from "../SelectList/SelectList"
 
+/**
+ * Modal Component
+ * ---------------
+ * Renders the editable fields for a task inside a modal-like layout.
+ *
+ * Responsibilities:
+ * - Displays inputs for title, description, status, priority, and due date
+ * - Validates fields visually based on the `validation` object
+ * - Delegates all field updates to parent callbacks (controlled component)
+ * - Uses SelectList for dropdown fields (status and priority)
+ *
+ * Controlled inputs:
+ * - Every field reflects the current `task` state
+ * - Changes are propagated upward through callback props
+ *
+ * Validation behavior:
+ * - `validation` contains boolean flags for each field
+ * - When a field is invalid, a small message is shown below the input
+ *
+ * @param {ModalProps} props - Contains the task data and update handlers.
+ */
 export function Modal({
     task,
     validation,
@@ -11,6 +32,15 @@ export function Modal({
     changeDueDate,
 }:ModalProps){
 
+    /**
+     * Render Logic
+     * ------------
+     * - Each field is displayed with a label and an input.
+     * - Inputs are fully controlled: their value comes from `task`.
+     * - Validation messages appear only when the corresponding flag is false.
+     * - SelectList is used for dropdown fields to keep UI consistent.
+     * - SVG icons are decorative and help visually identify each field.
+     */
     return (<>
         <h3 className="text-left">Task name:</h3>
         <label className="input validator w-full bg-gray-300 text-black">
@@ -26,6 +56,7 @@ export function Modal({
             minLength={1}
             maxLength={20}
             title="One character minimum"
+            /** Update task title */
             onChange={(e) => changeTitle(e.target.value)}
         />
         </label>
@@ -44,6 +75,7 @@ export function Modal({
             pattern="^.{10,}$"
             minLength={1}
             title="One character minimum"
+            /** Update task description */
             onChange={(e) => changeDescription(e.target.value)}
         />
         </label>
@@ -57,6 +89,7 @@ export function Modal({
             {label: 'In Progress', value: 'in-progress'},
             {label: 'Completed', value: 'completed'}
         ]}
+        /** Update task status */
         onChange={ option => changeStatus(option as TaskStatus) }
         />
 
@@ -68,11 +101,13 @@ export function Modal({
             {label: 'Medium', value: 'medium'},
             {label: 'High', value: 'high'}
         ]}
+        /** Update task priority */
         onChange={ option => changePriority(option as Priority) }
         />
 
         <h3 className="text-left">Due date:</h3>
         <input type="date" value={task.dueDate} className="input bg-gray-300 text-black"
+         /** Update task due date */
         onChange={(e) => changeDueDate(e.target.value)}/>
         {!validation?.dueDate && <p>Due date cannot be empty</p>}
     </>)

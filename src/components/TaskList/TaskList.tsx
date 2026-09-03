@@ -2,19 +2,18 @@ import type { TaskListProps, TaskStatus } from "../../types";
 import { Sortable } from "../Drag and Drop/Sortable";
 import { TaskItem } from "../TaskItem/TaskItem";
 import { DragDropProvider } from "@dnd-kit/react";
+import { motion, AnimatePresence } from "framer-motion";
 
 /**
- * Renders a list of tasks and delegates user interactions
- * (status change and deletion) to callback functions provided
- * by the parent component.
+ * TaskList component — renders and animates a sortable list of tasks.
+ * Delegates status changes, edits, and deletions to parent callbacks.
  *
- * @component
- * @param {TaskListProps} props - Props for the TaskList component.
- * @param {Task[]} props.tasks - Array of tasks to display.
- * @param {(id: string, newStatus: TaskStatus) => void} props.onStatusChange
- *        Callback fired when a task's status is changed.
- * @param {(id: string) => void} props.onDelete
- *        Callback fired when a task is deleted.
+ * Includes:
+ * - Drag & drop reordering (dnd-kit)
+ * - Smooth layout transitions (Framer Motion)
+ * - Animated entry/exit for each task
+ *
+ * @param {TaskListProps} props - Component props
  */
 export function TaskList({
     tasks,
@@ -23,45 +22,47 @@ export function TaskList({
     onDelete
     }:TaskListProps){
 
-    /**
-     * Handles status updates for a specific task.
-     *
-     * @function
-     * @param {string} id - ID of the task being updated.
-     * @param {TaskStatus} newStatus - New status selected by the user.
-     *
-     * Delegates the update to the parent callback `onStatusChange`.
-     */
+     /** Delegates status updates to the parent component */
     const handleStatusChange = (id: string, newStatus: TaskStatus) => {
         onStatusChange(id, newStatus);
     }
 
+    /** Delegates edit action to the parent component */
     const handleEdit = (id: string) => {
         onEdit(id);
     }
 
-    /**
-     * Handles deletion of a specific task.
-     *
-     * @function
-     * @param {string} id - ID of the task to delete.
-     *
-     * Delegates the deletion to the parent callback `onDelete`.
-     */
+    /** Delegates deletion to the parent component */
     const handleDelete = (id: string) => {
         onDelete(id);
     }
 
     /**
-     * Maps over the list of tasks and renders a TaskItem for each one.
-     * Each TaskItem receives its own data and the delegated handlers.
-     * DragDropProvider sets the droppable area
-     * Sortable make it posible to sort them based in index, requires the unique id
+     * Maps over the list of tasks and renders each one inside a sortable,
+     * animated wrapper.
+     *
+     * - DragDropProvider: defines the drag‑and‑drop context.
+     * - Sortable: enables reordering based on index and unique task ID.
+     *
+     * - motion.div (layout):
+     *      Enables automatic layout animations. When tasks change position
+     *      due to sorting, filtering, or deletion, Framer Motion calculates
+     *      the previous and next layout and smoothly animates the transition
+     *      between them instead of instantly jumping to the new position.
+     *
+     * - motion.div (initial / animate / exit):
+     *      Controls entry and exit animations:
+     *        • initial → starting state before the element appears
+     *        • animate → final state once rendered
+     *        • exit → animation played when the element is removed
+     *      This creates smooth fade/scale transitions when tasks are added,
+     *      removed, or updated.
      */
     return (
         <>
-            <ul className="list bg-base-100 mt-2 rounded-box shadow-md">
+            <motion.ul layout className="list bg-base-100 mt-2 rounded-box shadow-md">
                 <DragDropProvider>
+                    <AnimatePresence>
                     {tasks.map((task, index) => {
                         return (
                             <Sortable
@@ -69,18 +70,28 @@ export function TaskList({
                             id={task.id}
                             index={index}
                             >
+                                <motion.div
+                                    key={task.id}
+                                    layout
+                                    initial={{ opacity: 0, scale: 0.95 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 0.9 }}
+                                    transition={{ duration: 0.4 }}
+                                >
                                 <TaskItem
                                 task={task}
                                 onStatusChange={handleStatusChange}
                                 onEdit={handleEdit}
                                 onDelete={handleDelete}
                                 />
+                                </motion.div>
                                 <div className="my-1 w-full border-y-2 border-dotted border-slate-900"></div>
                             </Sortable>
                         )
-                        })}
+                    })}
+                    </AnimatePresence>
                 </DragDropProvider>
-            </ul>
+            </motion.ul>
         </>
     )
 }

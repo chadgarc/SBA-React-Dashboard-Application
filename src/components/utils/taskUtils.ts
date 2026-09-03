@@ -1,5 +1,18 @@
 import type { Priority, Task, TaskStatus, MetricsData, ValidationValues } from "../../types";
 
+/**
+ * createNewId
+ * -----------
+ * Generates a unique numeric ID (as a string) for a new task.
+ *
+ * Behavior:
+ * - Collects all existing IDs
+ * - Randomly generates a number between 0–10000
+ * - Repeats until the generated ID does not exist in the list
+ *
+ * @param {Task[]} tasks - Existing tasks used to avoid ID collisions.
+ * @returns {string} A unique ID for the new task.
+ */
 export const createNewId = (tasks: Task[]): string => {
         const ids = tasks.map( task => task.id );
         let newId: number = 0;
@@ -9,6 +22,21 @@ export const createNewId = (tasks: Task[]): string => {
         return `${newId}`;
     }
 
+
+/**
+ * filteredTasks
+ * -------------
+ * Applies search and filter logic to the task list.
+ *
+ * Behavior:
+ * - Search: Matches title or description (case‑insensitive)
+ * - Filters: Applies status and priority if provided
+ *
+ * @param {Task[]} tasks - Full list of tasks.
+ * @param {string} searchInput - Search text for title/description.
+ * @param {{status?: TaskStatus, priority?: Priority}} filters - Optional filters.
+ * @returns {Task[]} Tasks matching search and filter criteria.
+ */
 export const filteredTasks = (tasks: Task[], searchInput: string, filters: {status?: TaskStatus, priority?: Priority}): Task[] => {
     const searchedTask = searchInput === '' ? tasks
         : tasks.filter( task => task.title.toLowerCase().includes(searchInput.toLowerCase())
@@ -24,6 +52,14 @@ export const filteredTasks = (tasks: Task[], searchInput: string, filters: {stat
     return filteredTasks;
 }
 
+
+/**
+ * defaultInputs
+ * -------------
+ * Returns a blank task object used when creating a new task.
+ *
+ * @returns {Task} A task with default empty values.
+ */
 export function defaultInputs(): Task{
     return {
         id: '',
@@ -35,6 +71,21 @@ export function defaultInputs(): Task{
     }
 }
 
+
+/**
+ * updateMetrics
+ * -------------
+ * Computes dashboard metrics based on the current task list.
+ *
+ * Metrics:
+ * - total
+ * - pending
+ * - inProgress
+ * - completed
+ *
+ * @param {Task[]} tasks - List of tasks.
+ * @returns {MetricsData} Aggregated metrics.
+ */
 export function updateMetrics(tasks: Task[]): MetricsData{
     const total = tasks.length;
     const pending = tasks.filter( task => task.status === 'pending' ).length
@@ -43,6 +94,20 @@ export function updateMetrics(tasks: Task[]): MetricsData{
     return {total: total, pending: pending, inProgress: inProgress, completed: completed}
 }
 
+
+/**
+ * validateTask
+ * ------------
+ * Validates a task's fields according to minimum requirements.
+ *
+ * Rules:
+ * - title: ≥ 5 characters
+ * - description: ≥ 10 characters
+ * - dueDate: must not be empty
+ *
+ * @param {Task} task - Task to validate.
+ * @returns {ValidationValues} Boolean flags for each field.
+ */
 export const validateTask = (task: Task): ValidationValues => {
     const checker = {
         title: (task.title.trim().length >= 5),
@@ -52,6 +117,21 @@ export const validateTask = (task: Task): ValidationValues => {
     return checker;
 }
 
+
+/**
+ * onSortBy
+ * --------
+ * Sorts the task list based on the selected sort mode.
+ *
+ * Modes:
+ * - "priority": low → medium → high
+ * - "dueDate": earliest first
+ * - "default": numeric ID order
+ *
+ * @param {Task[]} taskList - Tasks to sort.
+ * @param {string} value - Sorting mode.
+ * @returns {Task[]} Sorted list.
+ */
 export function onSortBy(taskList: Task[], value: string){
         let sortedList: Task[] = [];
         if(value === 'priority'){

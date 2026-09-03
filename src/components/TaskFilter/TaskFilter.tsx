@@ -2,29 +2,42 @@ import type { Priority, TaskFilterProps, TaskStatus } from "../../types";
 import { SelectList } from "../SelectList/SelectList";
 
 /**
- * Renders two dropdown filters (status and priority) and notifies the parent
- * component whenever either filter changes. Each SelectList sends only the
- * relevant part of the filter (status or priority), allowing the parent to
- * merge partial updates into a full filter state.
+ * TaskFilter Component
+ * --------------------
+ * Provides two dropdown filters (status and priority) used to refine
+ * the task list. Each dropdown sends a *partial* filter update to the
+ * parent component, allowing the parent to merge both filters into a
+ * single state object.
  *
- * @component
- * @param {TaskFilterProps} props - Props for the TaskFilter component.
- * @param {(filters: { status?: TaskStatus; priority?: Priority }) => void} props.onFilterChange
- *        Callback fired whenever the user updates one of the filters.
+ * Responsibilities:
+ * - Renders a status filter and a priority filter
+ * - Converts "All" selections into `undefined` to indicate no filtering
+ * - Delegates filter changes upward through `onFilterChange`
+ *
+ * Controlled behavior:
+ * - The component does not store internal state
+ * - Each SelectList only updates its corresponding filter field
+ *
+ * @param {TaskFilterProps} props - Contains the filter change callback.
  */
 export function TaskFilter({
     onFilterChange
     }:TaskFilterProps){
 
+    /**
+     * Render Logic
+     * ------------
+     * - Two SelectList components:
+     *      • Status filter → updates `status`
+     *      • Priority filter → updates `priority`
+     *
+     * - Each dropdown sends only its part of the filter:
+     *      { status: ... } or { priority: ... }
+     *
+     * - The parent merges these partial updates into a full filter object.
+     */
     return (
         <>
-            {/*
-             * Status filter dropdown.
-             *
-             * Sends `{ status: undefined }` when "All Statuses" is selected,
-             * otherwise sends `{ status: <TaskStatus> }`.
-             *
-             * The parent merges this partial filter with the existing filter state. */}
             <SelectList
             defaultValue={'all'}
             options={[
@@ -38,14 +51,6 @@ export function TaskFilter({
                     status: value === 'all-stats' ? undefined : value as TaskStatus
                 })}}
             />
-            {/**
-             * Priority filter dropdown.
-             *
-             * Sends `{ priority: undefined }` when "All Priorities" is selected,
-             * otherwise sends `{ priority: <Priority> }`.
-             *
-             * The parent merges this partial filter with the existing filter state.
-             */}
             <SelectList
             defaultValue={'all-priorities'}
             options={[

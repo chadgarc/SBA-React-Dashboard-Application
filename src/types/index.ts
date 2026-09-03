@@ -1,6 +1,5 @@
 /**
- * Represents the possible workflow states of a task.
- * Used to control UI rendering and filtering logic.
+ * Workflow states for a task.
  *
  * - 'pending'      → Task has not started.
  * - 'in-progress'  → Task is currently being worked on.
@@ -18,14 +17,14 @@ export type TaskStatus = 'pending' | 'in-progress' | 'completed';
 export type Priority = 'low' | 'medium' | 'high'
 
 /**
- * Represents a single task item in the system.
+ * Represents a single task in the system.
  *
- * @property {string} id - Unique identifier for the task.
- * @property {string} title - Short title describing the task.
- * @property {string} description - Detailed explanation of the task.
- * @property {TaskStatus} status - Current workflow state of the task.
- * @property {Priority} priority - Urgency level of the task.
- * @property {string} dueDate - Deadline for completing the task (MM/DD/YYYY).
+ * @property {string} id - Unique identifier.
+ * @property {string} title - Short descriptive title.
+ * @property {string} description - Detailed explanation.
+ * @property {TaskStatus} status - Current workflow state.
+ * @property {Priority} priority - Urgency level.
+ * @property {string} dueDate - Deadline (YYYY-MM-DD).
  */
 export interface Task {
     id: string;
@@ -39,11 +38,13 @@ export interface Task {
 /**
  * Props for the TaskList component.
  *
- * @property {Task[]} tasks - Array of tasks to be rendered.
+ * @property {Task[]} tasks - Tasks to render.
  * @property {(taskId: string, newStatus: TaskStatus) => void} onStatusChange
- *   Callback fired when a task's status is updated.
+ *   Fired when a task's status changes.
+ * @property {(taskId: string) => void} onEdit
+ *   Fired when the user wants to edit a task.
  * @property {(taskId: string) => void} onDelete
- *   Callback fired when a task is removed.
+ *   Fired when the user deletes a task.
  */
 export interface TaskListProps {
     tasks: Task[];
@@ -55,11 +56,13 @@ export interface TaskListProps {
 /**
  * Props for the TaskItem component.
  *
- * @property {Task} task - The task data to display.
+ * @property {Task} task - Task data to display.
  * @property {(taskId: string, newStatus: TaskStatus) => void} onStatusChange
- *   Callback triggered when the user selects a new status.
+ *   Fired when the user selects a new status.
+ * @property {(taskId: string) => void} onEdit
+ *   Fired when the user clicks "Edit".
  * @property {(taskId: string) => void} onDelete
- *   Callback triggered when the user deletes the task.
+ *   Fired when the user clicks "Delete".
  */
 export interface TaskItemProps {
     task: Task;
@@ -72,8 +75,7 @@ export interface TaskItemProps {
  * Props for the TaskFilter component.
  *
  * @property {(filters: { status?: TaskStatus; priority?: Priority }) => void} onFilterChange
- *   Callback fired whenever the user updates either the status or priority filter.
- *   The callback receives only the changed filter field.
+ *   Fired when either filter changes. Only sends the updated field.
  */
 export interface TaskFilterProps {
     onFilterChange: (filters: {
@@ -83,12 +85,12 @@ export interface TaskFilterProps {
 }
 
 /**
- * Represents a selectable option inside a dropdown list.
+ * Represents a selectable option inside a dropdown.
  *
- * @template T - The type of the option's value.
+ * @template T - Type of the option value.
  *
- * @property {string} label - Text displayed to the user.
- * @property {T} value - Internal value returned when selected.
+ * @property {string} label - Display text.
+ * @property {T} value - Internal value.
  */
 export interface Option<T> {
     label: string,
@@ -96,13 +98,13 @@ export interface Option<T> {
 }
 
 /**
- * Props for a reusable select component.
+ * Props for the SelectList component.
  *
- * @template T - The type of the selected value.
+ * @template T - Type of the selected value.
  *
- * @property {T} defaultValue - Initial selected value.
- * @property {Option<T>[]} options - List of selectable options.
- * @property {(value: T) => void} onChange - Callback fired when the user selects a new value.
+ * @property {T} defaultValue - Initial selection.
+ * @property {Option<T>[]} options - Available options.
+ * @property {(value: T) => void} onChange - Fired when selection changes.
  */
 export interface SelectListProps<T> {
     defaultValue?: T,
@@ -111,7 +113,7 @@ export interface SelectListProps<T> {
 }
 
 /**
- * Represents the combined filter state for tasks.
+ * Combined filter state for tasks.
  *
  * @property {TaskStatus} [status] - Optional status filter.
  * @property {Priority} [priority] - Optional priority filter.
@@ -121,6 +123,14 @@ export interface FilterHandle {
     priority?: Priority
 }
 
+/**
+ * Dashboard metrics.
+ *
+ * @property {number} total - Total tasks.
+ * @property {number} pending - Pending tasks.
+ * @property {number} inProgress - Tasks in progress.
+ * @property {number} completed - Completed tasks.
+ */
 export interface MetricsData {
     total: number,
     pending: number,
@@ -128,6 +138,14 @@ export interface MetricsData {
     completed: number
 }
 
+/**
+ * Props for the TaskForm modal.
+ *
+ * @property {boolean} isOpen - Controls modal visibility.
+ * @property {() => void} onCancel - Fired when user cancels.
+ * @property {() => void} onSave - Fired when user saves.
+ * @property {React.ReactNode} children - Modal content.
+ */
 export interface TaskFormProps{
     isOpen: boolean,
     onCancel: () => void,
@@ -135,6 +153,15 @@ export interface TaskFormProps{
     children: React.ReactNode
 }
 
+/**
+ * Validation flags for a task.
+ *
+ * @property {boolean} title - Title validity.
+ * @property {boolean} description - Description validity.
+ * @property {boolean} [status] - Optional status validity.
+ * @property {boolean} [priority] - Optional priority validity.
+ * @property {boolean} dueDate - Due date validity.
+ */
 export interface ValidationValues{
     title: boolean,
     description: boolean,
@@ -143,6 +170,17 @@ export interface ValidationValues{
     dueDate: boolean
 }
 
+/**
+ * Props for the Modal component.
+ *
+ * @property {Task} task - Task being edited.
+ * @property {ValidationValues} validation - Validation flags.
+ * @property {(title: string) => void} changeTitle - Update title.
+ * @property {(description: string) => void} changeDescription - Update description.
+ * @property {(status: TaskStatus) => void} changeStatus - Update status.
+ * @property {(priority: Priority) => void} changePriority - Update priority.
+ * @property {(dueDate: string) => void} changeDueDate - Update due date.
+ */
 export interface ModalProps{
     task: Task,
     validation: ValidationValues,
@@ -153,17 +191,37 @@ export interface ModalProps{
     changeDueDate: (dueDate: string) => void
 }
 
+/**
+ * Props for the SearchBar component.
+ *
+ * @property {string} title - Fieldset title.
+ * @property {string} placeHolder - Input placeholder.
+ * @property {(text: string) => void} onTextChange - Fired on input change.
+ */
 export interface searchBarProps{
     title: string,
     placeHolder: string,
     onTextChange: (text:string) => void
 }
 
+/**
+ * Props for the Stat component.
+ *
+ * @property {string} title - Label for the metric.
+ * @property {number} value - Metric value.
+ */
 export interface StatProps{
     title: string,
     value: number
 }
 
+/**
+ * Props for the Sortable wrapper.
+ *
+ * @property {string} id - Unique sortable identifier.
+ * @property {number} index - Position in the list.
+ * @property {React.ReactNode} children - Wrapped content.
+ */
 export interface SortableProps{
     id:string,
     index: number,

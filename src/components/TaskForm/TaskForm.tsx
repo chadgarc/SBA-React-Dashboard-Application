@@ -2,33 +2,38 @@ import { useEffect, useRef } from "react"
 import type { TaskFormProps } from "../../types";
 
 /**
- * Modal Component
- * ---------------
- * A reusable modal built using the native <dialog> element.
+ * TaskForm Component
+ * ------------------
+ * A controlled modal built using the native <dialog> element. It displays
+ * editable task fields passed as `children` and provides Cancel/Save actions.
  *
- * Props:
- * @param {boolean} isOpen - Controls whether the modal is open or closed.
- * @param {() => void} onClose - Callback executed when the modal is closed.
+ * Responsibilities:
+ * - Opens and closes based on the `isOpen` prop
+ * - Uses `showModal()` and `close()` to control the native dialog
+ * - Delegates Cancel and Save actions to the parent component
+ * - Renders arbitrary content inside the modal (typically a task form)
  *
- * Component Interaction:
- * - The `App` component controls the modal state (`isModalOpen`).
- * - When `isOpen` becomes true, the modal opens using `showModal()`.
- * - The modal displays whatever content `App` passes as `children`,
- *   typically the selected user's editable fields.
- * - When the user closes the modal, `onClose` updates `isModalOpen` in `App`.
+ * Modal behavior:
+ * - The parent controls visibility through `isOpen`
+ * - When `isOpen` becomes true, the modal is shown programmatically
+ * - When closed, `onCancel` or `onSave` update the parent state
  *
- * Note:
- * Because <dialog> does not always re-render its internal content when open,
- * `App` uses `key={selectedUser?.id}` to force the modal to refresh when a
- * different user is selected.
+ * @param {TaskFormProps} props - Contains modal state, actions, and children.
  */
 export const TaskForm = ({
     isOpen,
     onCancel,
     onSave,
     children}: TaskFormProps) => {
-        const modalRef = useRef<HTMLDialogElement>(null);
+
+    /** Reference to the native <dialog> element */
+    const modalRef = useRef<HTMLDialogElement>(null);
         
+    /**
+     * Sync modal visibility with `isOpen`.
+     * - showModal() opens the dialog
+     * - close() hides it
+     */
     useEffect(() => {
         if(isOpen){
             modalRef.current?.showModal();
@@ -37,11 +42,18 @@ export const TaskForm = ({
         }
     }, [isOpen]);
 
+    /**
+     * Render Logic
+     * ------------
+     * - Wraps content inside a <dialog> element
+     * - `children` represent the editable fields of the task
+     * - Footer contains Cancel and Save buttons
+     * - Styling centers the modal and applies spacing
+     */
     return (
         <dialog ref={modalRef}
                 className="modal modal-bottom sm:modal-middle">
             <div className="modal-box flex flex-col gap-3">
-                {/* Everything that I want to add to the content of the modal */}
                 {children}
                 
                 <div className="flex justify-end gap-4">
